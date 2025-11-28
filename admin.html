@@ -10,36 +10,56 @@
         :root {
             --primary-red: #e6123d;
             --primary-dark: #232f3e;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
         }
         
         .bg-primary-custom { background-color: var(--primary-dark); }
-        .btn-primary-custom { background-color: var(--primary-red); border-color: var(--primary-red); }
+        .btn-primary-custom { 
+            background-color: var(--primary-red); 
+            border-color: var(--primary-red); 
+        }
+        .btn-primary-custom:hover {
+            background-color: #c81034;
+            border-color: #c81034;
+        }
         
         .product-image-small {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             object-fit: cover;
-            border-radius: 5px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
         }
         
         .image-preview {
             max-width: 100%;
-            max-height: 150px;
+            max-height: 200px;
             margin-top: 10px;
-            border-radius: 5px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
             display: none;
         }
         
         .file-upload {
             border: 2px dashed #ddd;
-            border-radius: 5px;
-            padding: 20px;
+            border-radius: 8px;
+            padding: 25px;
             text-align: center;
             cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
         }
         
         .file-upload:hover {
             border-color: var(--primary-red);
+            background: #fff5f5;
+        }
+        
+        .file-upload.dragover {
+            border-color: var(--primary-red);
+            background: #fff0f0;
         }
         
         .login-modal {
@@ -48,31 +68,34 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 3000;
+            z-index: 9999;
         }
         
         .login-content {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
+            padding: 40px;
+            border-radius: 15px;
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
             text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
         .password-input {
             font-family: 'Courier New', monospace;
             letter-spacing: 2px;
+            font-size: 16px;
         }
         
         .login-error {
-            color: red;
-            margin-top: 10px;
+            color: var(--primary-red);
+            margin-top: 15px;
             display: none;
+            font-weight: 500;
         }
         
         .admin-panel {
@@ -80,10 +103,72 @@
         }
         
         footer {
-            background-color: var(--primary-dark);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a2530 100%);
             color: white;
-            padding: 30px 0;
-            margin-top: 50px;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .stats-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stats-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .nav-tabs-custom .nav-link {
+            border: none;
+            border-radius: 8px;
+            margin: 0 5px;
+            font-weight: 500;
+        }
+        
+        .nav-tabs-custom .nav-link.active {
+            background: var(--primary-red);
+            color: white;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(230, 18, 61, 0.05);
+        }
+        
+        .stock-low {
+            background-color: #fff3cd !important;
+        }
+        
+        .stock-out {
+            background-color: #f8d7da !important;
+        }
+        
+        .badge-stock {
+            font-size: 0.75em;
+            padding: 4px 8px;
+        }
+        
+        .action-buttons .btn {
+            margin: 0 2px;
+            border-radius: 6px;
+        }
+        
+        .search-box {
+            max-width: 400px;
+        }
+        
+        .category-badge {
+            font-size: 0.75em;
+            padding: 4px 8px;
+            border-radius: 6px;
         }
     </style>
 </head>
@@ -91,251 +176,590 @@
     <!-- مودال ورود -->
     <div class="login-modal" id="loginModal">
         <div class="login-content">
-            <h3><i class="fas fa-lock"></i> ورود به پنل مدیریت</h3>
-            <p class="text-muted">لطفاً رمز عبور مدیریت را وارد کنید</p>
-            
-            <div class="mb-3">
-                <input type="password" class="form-control password-input" id="adminPassword" 
-                       placeholder="رمز عبور" onkeypress="checkEnterKey(event)">
+            <div class="mb-4">
+                <i class="fas fa-lock fa-3x text-primary-custom mb-3"></i>
+                <h3 class="fw-bold">ورود به پنل مدیریت</h3>
+                <p class="text-muted">لطفاً رمز عبور مدیریت را وارد کنید</p>
             </div>
             
-            <button class="btn btn-primary-custom w-100 mb-3" onclick="checkAdminPassword()">
-                ورود به مدیریت
+            <div class="mb-4">
+                <input type="password" class="form-control form-control-lg password-input" 
+                       id="adminPassword" placeholder="رمز عبور مدیریت" onkeypress="checkEnterKey(event)">
+            </div>
+            
+            <button class="btn btn-primary-custom btn-lg w-100 mb-3" onclick="checkAdminPassword()">
+                <i class="fas fa-sign-in-alt me-2"></i>ورود به پنل
             </button>
             
-            <div class="login-error" id="loginError">
-                <i class="fas fa-exclamation-triangle"></i> رمز عبور اشتباه است!
+            <div class="login-error alert alert-danger" id="loginError">
+                <i class="fas fa-exclamation-triangle me-2"></i> رمز عبور اشتباه است!
             </div>
             
-            <div class="mt-3 p-2 bg-light rounded">
+            <div class="mt-4 p-3 bg-light rounded">
+                <small class="text-muted d-block mb-2">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>رمز پیشفرض:</strong> JjKala@1403#Admin
+                </small>
                 <small class="text-muted">
-                    <strong>دسترسی فقط برای مدیران سیستم</strong>
+                    <i class="fas fa-shield-alt me-2"></i>
+                    دسترسی فقط برای مدیران سیستم
                 </small>
             </div>
         </div>
     </div>
 
-    <!-- پنل مدیریت (بعد از لاگین نمایش داده میشه) -->
+    <!-- پنل مدیریت اصلی -->
     <div class="admin-panel" id="adminPanel">
-        <nav class="navbar navbar-dark bg-primary-custom">
+        <!-- نوار بالایی -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary-custom shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand fw-bold" href="index.html" target="_blank">
                     <i class="fas fa-cog me-2"></i>
-                    پنل مدیریت جی جی کالا
+                    پنل مدیریت <span class="text-warning">جی جی کالا</span>
                 </a>
-                <div>
-                    <span class="text-light me-3">مدیریت</span>
-                    <a href="index.html" class="btn btn-outline-light me-2">
-                        <i class="fas fa-arrow-right me-2"></i>فروشگاه
-                    </a>
-                    <button class="btn btn-outline-warning" onclick="logoutAdmin()">
-                        <i class="fas fa-sign-out-alt me-2"></i>خروج
-                    </button>
+                
+                <div class="navbar-nav ms-auto">
+                    <div class="d-flex align-items-center">
+                        <span class="text-light me-3" id="adminWelcome">
+                            <i class="fas fa-user-shield me-2"></i>مدیر سیستم
+                        </span>
+                        <a href="index.html" target="_blank" class="btn btn-outline-light btn-sm me-2">
+                            <i class="fas fa-external-link-alt me-2"></i>مشاهده فروشگاه
+                        </a>
+                        <button class="btn btn-outline-warning btn-sm" onclick="logoutAdmin()">
+                            <i class="fas fa-sign-out-alt me-2"></i>خروج
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>
 
-        <div class="container my-4">
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body text-center">
-                            <h3 id="productsCount">0</h3>
-                            <p>تعداد محصولات</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-success">
-                        <div class="card-body text-center">
-                            <h3 id="ordersCount">0</h3>
-                            <p>سفارشات فعال</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-info">
-                        <div class="card-body text-center">
-                            <h3>۱</h3>
-                            <p>کاربران آنلاین</p>
-                        </div>
-                    </div>
-                </div>
+        <!-- آمار و اطلاعات -->
+        <div class="container my-5">
+            <div class="row g-4 mb-5" id="statsContainer">
+                <!-- آمار با JavaScript پر می‌شود -->
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>مدیریت محصولات</h4>
-                <button class="btn btn-primary-custom" onclick="showAddForm()">
-                    <i class="fas fa-plus me-2"></i>افزودن محصول
-                </button>
-            </div>
+            <!-- تب‌های مدیریت -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0 py-3">
+                    <ul class="nav nav-tabs nav-tabs-custom border-0" id="adminTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#products" data-bs-toggle="tab">
+                                <i class="fas fa-boxes me-2"></i>مدیریت محصولات
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#orders" data-bs-toggle="tab">
+                                <i class="fas fa-shopping-cart me-2"></i>سفارشات
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#categories" data-bs-toggle="tab">
+                                <i class="fas fa-tags me-2"></i>دسته‌بندی‌ها
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>تصویر</th>
-                            <th>نام محصول</th>
-                            <th>قیمت</th>
-                            <th>دسته‌بندی</th>
-                            <th>عملیات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsTable">
-                    </tbody>
-                </table>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <!-- تب محصولات -->
+                        <div class="tab-pane fade show active" id="products">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="fw-bold mb-0">
+                                    <i class="fas fa-boxes me-2 text-primary-custom"></i>
+                                    مدیریت محصولات
+                                </h4>
+                                <div class="d-flex gap-2">
+                                    <div class="search-box">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="productSearch" 
+                                                   placeholder="جستجوی محصول..." onkeyup="searchProductsAdmin()">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary-custom" onclick="showAddProductModal()">
+                                        <i class="fas fa-plus me-2"></i>افزودن محصول جدید
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info d-flex align-items-center">
+                                <i class="fas fa-info-circle me-2 fa-lg"></i>
+                                <div>
+                                    <strong>تغییرات بلافاصله اعمال می‌شوند!</strong>
+                                    محصولات اضافه یا ویرایش شده بلافاصله در فروشگاه نمایش داده می‌شوند.
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th width="80">تصویر</th>
+                                            <th>نام محصول</th>
+                                            <th width="120">قیمت</th>
+                                            <th width="100">موجودی</th>
+                                            <th width="120">دسته‌بندی</th>
+                                            <th width="120">ویژه</th>
+                                            <th width="150">عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="productsTable">
+                                        <!-- محصولات با JavaScript پر می‌شوند -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- تب سفارشات -->
+                        <div class="tab-pane fade" id="orders">
+                            <h4 class="fw-bold mb-4">
+                                <i class="fas fa-shopping-cart me-2 text-success"></i>
+                                مدیریت سفارشات
+                            </h4>
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                بخش سفارشات به زودی راه‌اندازی خواهد شد.
+                            </div>
+                        </div>
+
+                        <!-- تب دسته‌بندی‌ها -->
+                        <div class="tab-pane fade" id="categories">
+                            <h4 class="fw-bold mb-4">
+                                <i class="fas fa-tags me-2 text-info"></i>
+                                مدیریت دسته‌بندی‌ها
+                            </h4>
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                بخش دسته‌بندی‌ها به زودی راه‌اندازی خواهد شد.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- فوتر با اطلاعات تماس -->
+        <!-- فوتر -->
         <footer>
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6">
-                        <h5>اطلاعات تماس</h5>
-                        <p><i class="fas fa-map-marker-alt me-2"></i> آدرس: مازندران، لاویج، رییس کلا</p>
+                    <div class="col-md-4 mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-map-marker-alt me-2"></i>اطلاعات تماس
+                        </h5>
+                        <p><i class="fas fa-location-dot me-2"></i> مازندران، لاویج، رییس کلا</p>
                         <p><i class="fas fa-phone me-2"></i> تلفن: ۰۹۱۹۷۰۷۴۹۴۰</p>
                         <p><i class="fas fa-envelope me-2"></i> ایمیل: info@jjkala.ir</p>
                     </div>
-                    <div class="col-md-6">
-                        <h5>درباره جی جی کالا</h5>
-                        <p>فروشگاه اینترنتی جی جی کالا با بهترین قیمت‌ها و کیفیت عالی</p>
-                        <p>تحویل سریع در سراسر کشور</p>
+                    <div class="col-md-4 mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-store me-2"></i>درباره جی جی کالا
+                        </h5>
+                        <p>فروشگاه اینترنتی جی جی کالا با بهترین قیمت‌ها و کیفیت عالی در خدمت شماست.</p>
+                        <p>تحویل سریع و تضمین کیفیت در سراسر کشور</p>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-chart-line me-2"></i>آمار سریع
+                        </h5>
+                        <div id="footerStats">
+                            <!-- آمار فوتر -->
+                        </div>
                     </div>
                 </div>
-                <div class="text-center mt-4 pt-3 border-top">
-                    <p>کلیه حقوق متعلق به جی جی کالا می‌باشد © ۱۴۰۳</p>
+                <div class="text-center mt-4 pt-3 border-top border-secondary">
+                    <p class="mb-0">
+                        <i class="fas fa-copyright me-2"></i>
+                        کلیه حقوق متعلق به جی جی کالا می‌باشد © ۱۴۰۳
+                    </p>
                 </div>
             </div>
         </footer>
     </div>
 
-    <!-- مودال افزودن محصول -->
-    <div class="modal fade" id="addModal" tabindex="-1">
-        <div class="modal-dialog">
+    <!-- مودال افزودن/ویرایش محصول -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">افزودن محصول جدید</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header bg-primary-custom text-white">
+                    <h5 class="modal-title" id="modalTitle">افزودن محصول جدید</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="productForm">
-                        <div class="mb-3">
-                            <label class="form-label">نام محصول</label>
-                            <input type="text" class="form-control" id="productName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">قیمت (تومان)</label>
-                            <input type="number" class="form-control" id="productPrice" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">توضیحات</label>
-                            <textarea class="form-control" id="productDescription" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">دسته‌بندی</label>
-                            <select class="form-select" id="productCategory">
-                                <option value="الکترونیک">الکترونیک</option>
-                                <option value="لوازم خانگی">لوازم خانگی</option>
-                                <option value="پوشاک">پوشاک</option>
-                                <option value="کتاب">کتاب</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">تصویر محصول</label>
-                            <div class="file-upload" onclick="document.getElementById('productImage').click()">
-                                <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
-                                <p>برای آپلود تصویر کلیک کنید</p>
-                                <small class="text-muted">فرمت‌های مجاز: JPG, PNG, GIF</small>
-                                <img id="imagePreview" class="image-preview" alt="پیش‌نمایش تصویر">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">نام محصول *</label>
+                                    <input type="text" class="form-control" id="productName" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">قیمت (تومان) *</label>
+                                            <input type="number" class="form-control" id="productPrice" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">موجودی *</label>
+                                            <input type="number" class="form-control" id="productStock" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">توضیحات محصول</label>
+                                    <textarea class="form-control" id="productDescription" rows="3" 
+                                              placeholder="توضیحات کامل محصول..."></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">دسته‌بندی *</label>
+                                            <select class="form-select" id="productCategory" required>
+                                                <option value="">انتخاب کنید</option>
+                                                <option value="الکترونیک">الکترونیک</option>
+                                                <option value="لوازم خانگی">لوازم خانگی</option>
+                                                <option value="پوشاک">پوشاک</option>
+                                                <option value="کتاب">کتاب</option>
+                                                <option value="لوازم تحریر">لوازم تحریر</option>
+                                                <option value="آرایشی و بهداشتی">آرایشی و بهداشتی</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">وضعیت محصول</label>
+                                            <div class="form-check form-switch mt-2">
+                                                <input class="form-check-input" type="checkbox" id="productFeatured">
+                                                <label class="form-check-label" for="productFeatured">
+                                                    محصول ویژه
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <input type="file" id="productImage" accept="image/*" style="display: none" onchange="previewImage(this)">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">تصویر محصول</label>
+                                    <div class="file-upload" id="fileUploadArea" 
+                                         onclick="document.getElementById('productImage').click()">
+                                        <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-3"></i>
+                                        <p class="mb-2">برای آپلود تصویر کلیک کنید</p>
+                                        <small class="text-muted d-block">فرمت‌های مجاز: JPG, PNG, GIF</small>
+                                        <small class="text-muted">حداکثر سایز: 2MB</small>
+                                        <img id="imagePreview" class="image-preview mt-3" alt="پیش‌نمایش تصویر">
+                                    </div>
+                                    <input type="file" id="productImage" accept="image/*" style="display: none" 
+                                           onchange="previewImage(this)">
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-                    <button type="button" class="btn btn-primary-custom" onclick="addProduct()">ذخیره محصول</button>
+                    <button type="button" class="btn btn-primary-custom" id="modalSaveBtn" onclick="saveProduct()">
+                        <i class="fas fa-save me-2"></i>ذخیره محصول
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- اسکریپت‌ها -->
     <script src="products.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const ADMIN_PASSWORD = "JjKala@1403#Admin"; // رمز عبور مدیریت
+        const ADMIN_PASSWORD = "JjKala@1403#Admin";
+        let currentEditingProduct = null;
         let currentImageFile = null;
-        let isAdminLoggedIn = false;
 
         // بررسی رمز عبور
         function checkAdminPassword() {
-            const enteredPassword = document.getElementById('adminPassword').value;
+            const password = document.getElementById('adminPassword').value;
             
-            if (enteredPassword === ADMIN_PASSWORD) {
-                isAdminLoggedIn = true;
+            if (password === ADMIN_PASSWORD) {
                 document.getElementById('loginModal').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-                loadProducts();
+                loadAdminPanel();
             } else {
                 document.getElementById('loginError').style.display = 'block';
                 document.getElementById('adminPassword').value = '';
-                document.getElementById('adminPassword').focus();
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
             }
         }
 
-        // چک کردن کلید انتر
         function checkEnterKey(event) {
             if (event.key === 'Enter') {
                 checkAdminPassword();
             }
         }
 
-        // خروج از مدیریت
         function logoutAdmin() {
-            isAdminLoggedIn = false;
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('loginModal').style.display = 'flex';
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('loginError').style.display = 'none';
+            if (confirm('آیا از حساب کاربری خود خارج می‌شوید؟')) {
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('loginModal').style.display = 'flex';
+                document.getElementById('adminPassword').value = '';
+            }
         }
 
-        function loadProducts() {
-            const table = document.getElementById('productsTable');
-            table.innerHTML = '';
+        function loadAdminPanel() {
+            updateStats();
+            loadProductsTable();
+            setupDragAndDrop();
+        }
+
+        function updateStats() {
+            if (!window.productManager) return;
             
-            // محاسبه سفارشات
-            const cart = JSON.parse(localStorage.getItem('jjkala_cart')) || [];
-            const activeOrders = cart.length;
-            document.getElementById('ordersCount').textContent = activeOrders;
-            
-            window.products.forEach(product => {
-                let imageHtml = '<i class="fas fa-box text-muted"></i>';
-                if (product.image) {
-                    imageHtml = `<img src="${product.image}" class="product-image-small" alt="${product.name}">`;
-                }
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <div class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: #f5f5f5; border-radius: 5px;">
-                            ${imageHtml}
+            const stats = window.productManager.getStats();
+            const statsHTML = `
+                <div class="col-md-3">
+                    <div class="card stats-card border-primary">
+                        <div class="card-body text-center text-primary">
+                            <i class="fas fa-boxes stats-icon"></i>
+                            <h3 class="fw-bold">${stats.totalProducts}</h3>
+                            <p class="mb-0 fw-medium">تعداد محصولات</p>
                         </div>
-                    </td>
-                    <td>${product.name}</td>
-                    <td>${product.price.toLocaleString()} تومان</td>
-                    <td>${product.category}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${product.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                table.appendChild(row);
-            });
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stats-card border-success">
+                        <div class="card-body text-center text-success">
+                            <i class="fas fa-money-bill-wave stats-icon"></i>
+                            <h3 class="fw-bold">${(stats.totalValue / 1000000).toFixed(1)}M</h3>
+                            <p class="mb-0 fw-medium">ارزش موجودی (تومان)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stats-card border-warning">
+                        <div class="card-body text-center text-warning">
+                            <i class="fas fa-exclamation-triangle stats-icon"></i>
+                            <h3 class="fw-bold">${stats.lowStock}</h3>
+                            <p class="mb-0 fw-medium">موجودی کم</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stats-card border-info">
+                        <div class="card-body text-center text-info">
+                            <i class="fas fa-tags stats-icon"></i>
+                            <h3 class="fw-bold">${stats.categories}</h3>
+                            <p class="mb-0 fw-medium">دسته‌بندی‌ها</p>
+                        </div>
+                    </div>
+                </div>
+            `;
             
-            document.getElementById('productsCount').textContent = window.products.length;
+            document.getElementById('statsContainer').innerHTML = statsHTML;
+            
+            // آمار فوتر
+            document.getElementById('footerStats').innerHTML = `
+                <p><i class="fas fa-box me-2"></i> محصولات فعال: ${stats.totalProducts}</p>
+                <p><i class="fas fa-tags me-2"></i> دسته‌بندی‌ها: ${stats.categories}</p>
+                <p><i class="fas fa-exclamation me-2"></i> نیاز به توجه: ${stats.lowStock}</p>
+            `;
+        }
+
+        function loadProductsTable() {
+            if (!window.productManager) return;
+            
+            const products = window.productManager.getAllProducts();
+            const table = document.getElementById('productsTable');
+            
+            if (products.length === 0) {
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                            هیچ محصولی یافت نشد
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            table.innerHTML = products.map(product => {
+                const stockClass = product.stock === 0 ? 'stock-out' : product.stock < 5 ? 'stock-low' : '';
+                const stockBadge = product.stock === 0 ? 
+                    '<span class="badge bg-danger badge-stock">ناموجود</span>' :
+                    product.stock < 5 ? 
+                    `<span class="badge bg-warning badge-stock">کمبود</span>` :
+                    `<span class="badge bg-success badge-stock">موجود</span>`;
+                
+                const featuredBadge = product.featured ? 
+                    '<span class="badge bg-primary badge-stock"><i class="fas fa-star me-1"></i>ویژه</span>' : '';
+                
+                const imageHtml = product.image ? 
+                    `<img src="${product.image}" class="product-image-small" alt="${product.name}">` :
+                    `<div class="product-image-small bg-light d-flex align-items-center justify-content-center">
+                        <i class="fas fa-box text-muted"></i>
+                    </div>`;
+                
+                return `
+                    <tr class="${stockClass}">
+                        <td>${imageHtml}</td>
+                        <td>
+                            <div class="fw-bold">${product.name}</div>
+                            <small class="text-muted">${product.description.substring(0, 50)}...</small>
+                        </td>
+                        <td>
+                            <span class="fw-bold text-success">${product.price.toLocaleString()}</span>
+                            <small class="text-muted d-block">تومان</small>
+                        </td>
+                        <td>
+                            <div class="fw-bold">${product.stock}</div>
+                            ${stockBadge}
+                        </td>
+                        <td>
+                            <span class="category-badge bg-secondary text-white">${product.category}</span>
+                        </td>
+                        <td>${featuredBadge}</td>
+                        <td>
+                            <div class="action-buttons d-flex">
+                                <button class="btn btn-sm btn-outline-primary" onclick="editProduct(${product.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success" onclick="increaseStock(${product.id})">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning" onclick="decreaseStock(${product.id})">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${product.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function searchProductsAdmin() {
+            const query = document.getElementById('productSearch').value;
+            if (!window.productManager) return;
+            
+            const results = query ? window.productManager.searchProducts(query) : window.productManager.getAllProducts();
+            const table = document.getElementById('productsTable');
+            
+            if (results.length === 0) {
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">
+                            <i class="fas fa-search fa-2x mb-2 d-block"></i>
+                            هیچ محصولی با "${query}" یافت نشد
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            table.innerHTML = results.map(product => {
+                const stockClass = product.stock === 0 ? 'stock-out' : product.stock < 5 ? 'stock-low' : '';
+                const stockBadge = product.stock === 0 ? 
+                    '<span class="badge bg-danger badge-stock">ناموجود</span>' :
+                    product.stock < 5 ? 
+                    `<span class="badge bg-warning badge-stock">کمبود</span>` :
+                    `<span class="badge bg-success badge-stock">موجود</span>`;
+                
+                const featuredBadge = product.featured ? 
+                    '<span class="badge bg-primary badge-stock"><i class="fas fa-star me-1"></i>ویژه</span>' : '';
+                
+                const imageHtml = product.image ? 
+                    `<img src="${product.image}" class="product-image-small" alt="${product.name}">` :
+                    `<div class="product-image-small bg-light d-flex align-items-center justify-content-center">
+                        <i class="fas fa-box text-muted"></i>
+                    </div>`;
+                
+                return `
+                    <tr class="${stockClass}">
+                        <td>${imageHtml}</td>
+                        <td>
+                            <div class="fw-bold">${product.name}</div>
+                            <small class="text-muted">${product.description.substring(0, 50)}...</small>
+                        </td>
+                        <td>
+                            <span class="fw-bold text-success">${product.price.toLocaleString()}</span>
+                            <small class="text-muted d-block">تومان</small>
+                        </td>
+                        <td>
+                            <div class="fw-bold">${product.stock}</div>
+                            ${stockBadge}
+                        </td>
+                        <td>
+                            <span class="category-badge bg-secondary text-white">${product.category}</span>
+                        </td>
+                        <td>${featuredBadge}</td>
+                        <td>
+                            <div class="action-buttons d-flex">
+                                <button class="btn btn-sm btn-outline-primary" onclick="editProduct(${product.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success" onclick="increaseStock(${product.id})">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning" onclick="decreaseStock(${product.id})">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${product.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function showAddProductModal() {
+            currentEditingProduct = null;
+            currentImageFile = null;
+            document.getElementById('modalTitle').textContent = 'افزودن محصول جدید';
+            document.getElementById('modalSaveBtn').innerHTML = '<i class="fas fa-save me-2"></i>ذخیره محصول';
+            document.getElementById('productForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
+        }
+
+        function editProduct(productId) {
+            if (!window.productManager) return;
+            
+            const product = window.productManager.getProductById(productId);
+            if (!product) return;
+            
+            currentEditingProduct = product;
+            currentImageFile = null;
+            
+            document.getElementById('modalTitle').textContent = 'ویرایش محصول';
+            document.getElementById('modalSaveBtn').innerHTML = '<i class="fas fa-save me-2"></i>بروزرسانی محصول';
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('productDescription').value = product.description;
+            document.getElementById('productCategory').value = product.category;
+            document.getElementById('productFeatured').checked = product.featured;
+            
+            if (product.image) {
+                document.getElementById('imagePreview').src = product.image;
+                document.getElementById('imagePreview').style.display = 'block';
+            } else {
+                document.getElementById('imagePreview').style.display = 'none';
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
         }
 
         function previewImage(input) {
@@ -347,80 +771,158 @@
                     return;
                 }
                 
-                const reader = new FileReader();
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('حجم فایل باید کمتر از 2MB باشد!');
+                    input.value = '';
+                    return;
+                }
                 
+                const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('imagePreview').src = e.target.result;
                     document.getElementById('imagePreview').style.display = 'block';
                     currentImageFile = file;
-                }
-                
+                };
                 reader.readAsDataURL(file);
             }
         }
 
-        function showAddForm() {
-            if (!isAdminLoggedIn) {
-                alert('لطفاً ابتدا وارد شوید');
-                return;
-            }
+        function setupDragAndDrop() {
+            const uploadArea = document.getElementById('fileUploadArea');
             
-            document.getElementById('productForm').reset();
-            document.getElementById('imagePreview').style.display = 'none';
-            currentImageFile = null;
-            new bootstrap.Modal(document.getElementById('addModal')).show();
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    document.getElementById('productImage').files = files;
+                    previewImage(document.getElementById('productImage'));
+                }
+            });
         }
 
-        function addProduct() {
-            if (!isAdminLoggedIn) {
-                alert('دسترسی غیرمجاز');
+        function saveProduct() {
+            if (!window.productManager) return;
+            
+            const name = document.getElementById('productName').value.trim();
+            const price = parseInt(document.getElementById('productPrice').value);
+            const stock = parseInt(document.getElementById('productStock').value);
+            const description = document.getElementById('productDescription').value.trim();
+            const category = document.getElementById('productCategory').value;
+            const featured = document.getElementById('productFeatured').checked;
+            
+            if (!name || !price || isNaN(price) || isNaN(stock)) {
+                alert('لطفاً فیلدهای ضروری (نام، قیمت و موجودی) را به درستی پر کنید.');
                 return;
             }
             
-            const name = document.getElementById('productName').value;
-            const price = parseInt(document.getElementById('productPrice').value);
-            const description = document.getElementById('productDescription').value;
-            const category = document.getElementById('productCategory').value;
-            
-            const newProduct = {
-                id: Math.max(...window.products.map(p => p.id), 0) + 1,
+            const productData = {
                 name,
                 price,
+                stock,
                 description,
                 category,
-                image: currentImageFile ? URL.createObjectURL(currentImageFile) : null
+                featured,
+                image: currentImageFile ? URL.createObjectURL(currentImageFile) : 
+                      currentEditingProduct ? currentEditingProduct.image : null
             };
             
-            window.products.push(newProduct);
-            saveProducts();
-            loadProducts();
+            if (currentEditingProduct) {
+                // ویرایش محصول موجود
+                window.productManager.updateProduct(currentEditingProduct.id, productData);
+                showToast('محصول با موفقیت بروزرسانی شد!', 'success');
+            } else {
+                // افزودن محصول جدید
+                window.productManager.addProduct(productData);
+                showToast('محصول جدید با موفقیت اضافه شد!', 'success');
+            }
             
-            bootstrap.Modal.getInstance(document.getElementById('addModal')).hide();
-            alert('محصول با موفقیت اضافه شد!');
+            // بروزرسانی رابط کاربری
+            loadProductsTable();
+            updateStats();
+            
+            // بستن مودال
+            bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+        }
+
+        function increaseStock(productId) {
+            if (!window.productManager) return;
+            
+            if (window.productManager.increaseStock(productId, 1)) {
+                loadProductsTable();
+                updateStats();
+                showToast('موجودی محصول افزایش یافت!', 'success');
+            }
+        }
+
+        function decreaseStock(productId) {
+            if (!window.productManager) return;
+            
+            const product = window.productManager.getProductById(productId);
+            if (product && product.stock > 0) {
+                if (window.productManager.decreaseStock(productId, 1)) {
+                    loadProductsTable();
+                    updateStats();
+                    showToast('موجودی محصول کاهش یافت!', 'warning');
+                }
+            } else {
+                alert('موجودی این محصول صفر است!');
+            }
         }
 
         function deleteProduct(productId) {
-            if (!isAdminLoggedIn) {
-                alert('دسترسی غیرمجاز');
-                return;
-            }
+            if (!window.productManager) return;
             
-            if (confirm('آیا از حذف این محصول مطمئن هستید؟')) {
-                window.products = window.products.filter(p => p.id !== productId);
-                saveProducts();
-                loadProducts();
-                alert('محصول حذف شد!');
+            const product = window.productManager.getProductById(productId);
+            if (!product) return;
+            
+            if (confirm(`آیا از حذف محصول "${product.name}" مطمئن هستید؟\nاین عمل قابل بازگشت نیست!`)) {
+                window.productManager.deleteProduct(productId);
+                loadProductsTable();
+                updateStats();
+                showToast('محصول با موفقیت حذف شد!', 'error');
             }
         }
 
-        function saveProducts() {
-            localStorage.setItem('jjkala_products', JSON.stringify(window.products));
+        function showToast(message, type = 'info') {
+            // ایجاد یک toast ساده
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
+            toast.style.position = 'fixed';
+            toast.style.top = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.zIndex = '9999';
+            toast.style.minWidth = '300px';
+            toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 4000);
         }
 
-        // اجرای اولیه - نمایش لاگین
+        // اجرای اولیه
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('loginModal').style.display = 'flex';
             document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminPassword').focus();
         });
     </script>
 </body>
